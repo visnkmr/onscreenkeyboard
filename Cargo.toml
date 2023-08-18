@@ -1,0 +1,23 @@
+[package]
+name = "onscreenkeyboard"
+version = "0.1.0"
+description = "onscreenkeyboard."
+authors = ["visnk"]
+license = ""
+repository = "https://github.com/visnkmr/onscreenkeyboard"
+edition = "2021"
+
+# [build]
+# target-dir="H:\\rust_deps\\"
+
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.
+opt-level = "z"
+lto = true
+panic = "abort"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rdev = "0.5.1"
+gtk="0.17.1"
