@@ -32,10 +32,69 @@ fn resize_window(window: &Window,vbox:&gtk::Box) {
     window.queue_resize(); // Trigger a resize event
 
 }
+fn gethoverwindow(window2:&Window)->Window{
+    let window = gtk::Window::new(WindowType::Toplevel);
+    window.set_title("Unfocusable Window");
+    window.set_decorated(false);
+    // window.set_default_size(480, 480);
+    window.set_keep_above(true);
+    window.set_skip_taskbar_hint(true);
+    window.set_skip_pager_hint(true);
+    window.set_accept_focus(false);
 
+    let button = gtk::Button::with_label("A");
+    button.set_margin(20);
+    // button.connect_clicked(|_| {
+    //     pressandrelease(Key::KeyA);
+
+    // });
+
+    window.add(&button);
+    button.connect_clicked(glib::clone!(@weak button, @weak window2, @weak window => move |_| {
+      window2.show_all();
+      window.hide();
+      // let cv=*arco.lock().unwrap();
+      // if(cv){
+      //     button.hide();
+      //     button2.hide();
+      //     button3.hide();
+      // vbox.set_no_show_all(true); 
+  
+      // }
+      // else{
+          
+  
+      //     button.show();
+      //     button2.show();
+      //     button3.show();
+      // vbox.set_no_show_all(true); 
+  
+      // }
+      
+      // let mut data=arco_clone.lock().unwrap();
+      // *data=!cv;
+      // resize_window(&window,&vbox)
+      // gtk::main_quit(); // Close the window and quit the GTK main event loop
+  
+  }));
+    //   window.show_all();
+      window.connect_button_press_event(move |_window, event| {
+          let coord=event.root();
+          if event.button() == 1 {
+              _window.begin_move_drag(
+                  event.button() as i32,
+                  coord.0 as i32,
+                 coord.1 as i32,
+                  event.time()
+              );
+          }
+          Inhibit(false)
+      });
+
+      (window)
+}
 fn main() {
     gtk::init().expect("Failed to initialize GTK.");
-
     let window = gtk::Window::new(WindowType::Toplevel);
     window.set_title("Unfocusable Window");
     window.set_decorated(false);
@@ -81,28 +140,32 @@ fn main() {
 //   window.set_resize_mode(gtk::ResizeMode::Parent);
 
   window.add(&vbox);
-  toggle_button.connect_clicked(glib::clone!(@weak vbox, @weak button,@weak button2,@weak button3, @weak window => move |_| {
-    let cv=*arco.lock().unwrap();
-    if(cv){
-        button.hide();
-        button2.hide();
-        button3.hide();
-    vbox.set_no_show_all(true); 
+  let win2 = gethoverwindow(&window);
 
-    }
-    else{
+  toggle_button.connect_clicked(glib::clone!(@weak win2,@weak vbox, @weak button,@weak button2,@weak button3, @weak window => move |_| {
+    window.hide();
+    win2.show_all();
+    // let cv=*arco.lock().unwrap();
+    // if(cv){
+    //     button.hide();
+    //     button2.hide();
+    //     button3.hide();
+    // vbox.set_no_show_all(true); 
+
+    // }
+    // else{
         
 
-        button.show();
-        button2.show();
-        button3.show();
-    vbox.set_no_show_all(true); 
+    //     button.show();
+    //     button2.show();
+    //     button3.show();
+    // vbox.set_no_show_all(true); 
 
-    }
+    // }
     
-    let mut data=arco_clone.lock().unwrap();
-    *data=!cv;
-    resize_window(&window,&vbox)
+    // let mut data=arco_clone.lock().unwrap();
+    // *data=!cv;
+    // resize_window(&window,&vbox)
     // gtk::main_quit(); // Close the window and quit the GTK main event loop
 
 }));
