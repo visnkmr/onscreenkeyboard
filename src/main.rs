@@ -35,7 +35,7 @@ fn resize_window(window: &Window,vbox:&gtk::Box) {
 }
 fn gethoverwindow(window2:&Window)->Window{
     let window = gtk::Window::new(WindowType::Toplevel);
-    window.set_title("Unfocusable Window");
+    window.set_title("onscreenkeyboard");
     window.set_decorated(false);
     // window.set_default_size(800,800);
     window.set_keep_above(true);
@@ -43,7 +43,7 @@ fn gethoverwindow(window2:&Window)->Window{
     window.set_skip_pager_hint(true);
     window.set_accept_focus(false);
 
-    let button = gtk::Button::with_label("A");
+    let button = gtk::Button::with_label("Remote");
     button.set_margin(20);
     // button.connect_clicked(|_| {
     //     pressandrelease(Key::KeyA);
@@ -101,76 +101,124 @@ fn main() {
     window.set_decorated(false);
     // window.set_default_size(480, 480);
     window.set_keep_above(true);
+    // Create a GdkColor for black
+    
     window.set_skip_taskbar_hint(true);
     window.set_skip_pager_hint(true);
     window.set_accept_focus(false);
 
     let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
-    let letters = vec![
-        vec!["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        vec!["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-        vec!["Z", "X", "C", "V", "B", "N", "M"],
-    ];
-    let key_map: HashMap<&str, Key> = [
-        ("A", Key::KeyA),
-        ("B", Key::KeyB),
-        ("C", Key::KeyC),
-        ("D", Key::KeyD),
-        ("E", Key::KeyE),
-        ("F", Key::KeyF),
-        ("G", Key::KeyG),
-        ("H", Key::KeyH),
-        ("I", Key::KeyI),
-        ("J", Key::KeyJ),
-        ("K", Key::KeyK),
-        ("L", Key::KeyL),
-        ("M", Key::KeyM),
-        ("N", Key::KeyN),
-        ("O", Key::KeyO),
-        ("P", Key::KeyP),
-        ("Q", Key::KeyQ),
-        ("R", Key::KeyR),
-        ("S", Key::KeyS),
-        ("T", Key::KeyT),
-        ("U", Key::KeyU),
-        ("V", Key::KeyV),
-        ("W", Key::KeyW),
-        ("X", Key::KeyX),
-        ("Y", Key::KeyY),
-        ("Z", Key::KeyZ),
-    ]
-    .iter()
-    .cloned()
-    .collect();
-for row in letters {
-    let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    for letter in row {
-        let button = gtk::Button::with_label(letter);
-        // button.set_margin(20);
-        let key = key_map.get(letter).cloned();
+    // let letters = vec![
+    //     vec!["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+    //     vec!["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+    //     vec!["Z", "X", "C", "V", "B", "N", "M"],
+    // ];
+    // let key_map: HashMap<&str, Key> = [
+    //     ("A", Key::KeyA),
+    //     ("B", Key::KeyB),
+    //     ("C", Key::KeyC),
+    //     ("D", Key::KeyD),
+    //     ("E", Key::KeyE),
+    //     ("F", Key::KeyF),
+    //     ("G", Key::KeyG),
+    //     ("H", Key::KeyH),
+    //     ("I", Key::KeyI),
+    //     ("J", Key::KeyJ),
+    //     ("K", Key::KeyK),
+    //     ("L", Key::KeyL),
+    //     ("M", Key::KeyM),
+    //     ("N", Key::KeyN),
+    //     ("O", Key::KeyO),
+    //     ("P", Key::KeyP),
+    //     ("Q", Key::KeyQ),
+    //     ("R", Key::KeyR),
+    //     ("S", Key::KeyS),
+    //     ("T", Key::KeyT),
+    //     ("U", Key::KeyU),
+    //     ("V", Key::KeyV),
+    //     ("W", Key::KeyW),
+    //     ("X", Key::KeyX),
+    //     ("Y", Key::KeyY),
+    //     ("Z", Key::KeyZ),
+    // ]
+    // .iter()
+    // .cloned()
+    // .collect();
+// for row in letters {
+//     let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+//     for letter in row {
+//         let button = gtk::Button::with_label(letter);
+//         // button.set_margin(20);
+//         let key = key_map.get(letter).cloned();
+//         button.connect_clicked(move |_| {
+//             pressandrelease(key.unwrap())
+//         });
+//         row_container.add(&button);
+//     }
+//     container.add(&row_container);
+// }
+let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    // for _ in 0..5 {
+        let button = gtk::Button::with_label("Desktop");
+        button.set_margin(10);
         button.connect_clicked(move |_| {
-            pressandrelease(key.unwrap())
+            godesktop();
         });
         row_container.add(&button);
-    }
+
+        let button3 = gtk::Button::with_label("Fullscreen");
+        button3.set_margin(10);
+        button3.connect_clicked(|_| {
+            fullscreen();
+    
+        });
+        row_container.add(&button3);
+    // }
     container.add(&row_container);
-}
 
-    let button3 = gtk::Button::with_label("Fullscreen");
-    button3.set_margin(20);
-    button3.connect_clicked(|_| {
-        fullscreen();
+    let button = gtk::Button::with_label("Up");
+        button.set_margin(20);
+        button.connect_clicked(move |_| {
+            pressandrelease(Key::UpArrow)
+        });
+        container.add(&button);
+    
+    let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    // for _ in 0..5 {
+        let button = gtk::Button::with_label("Left");
+        button.set_margin(20);
+        button.connect_clicked(move |_| {
+            pressandrelease(Key::LeftArrow)
+        });
+        row_container.add(&button);
+        
+        let button = gtk::Button::with_label("Right");
+        button.set_margin(20);
+        button.connect_clicked(move |_| {
+            pressandrelease(Key::RightArrow)
+        });
+        row_container.add(&button);
+    // }
+    container.add(&row_container);
 
-    });
+    let button = gtk::Button::with_label("Down");
+        button.set_margin(20);
+        button.connect_clicked(move |_| {
+            pressandrelease(Key::DownArrow)
+        });
+        container.add(&button);
+
+
+   
     let button2 = gtk::Button::with_label("Quit");
-    button2.set_margin(20);
+    button2.set_margin(10);
     button2.connect_clicked(|_| {
         gtk::main_quit(); // Close the window and quit the GTK main event loop
 
     });
     
   // Create the toggle button
-  let toggle_button = gtk::Button::with_label("Toggle");
+  let toggle_button = gtk::Button::with_label("Remote");
   let mut showornot=true;
   let arco=Arc::new(Mutex::new(showornot));
   let arco_clone=arco.clone();
@@ -180,7 +228,6 @@ for row in letters {
 //   vbox.set_no_show_all(true); 
   vbox.add(&container);
   vbox.add(&button2);
-  vbox.add(&button3);
   vbox.add(&toggle_button);
 //   vbox.set_resize_mode(gtk::ResizeMode::Parent);
 //   window.set_resize_mode(gtk::ResizeMode::Parent);
