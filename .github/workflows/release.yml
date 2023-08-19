@@ -105,8 +105,6 @@ jobs:
           path: target/release/${{ env.CLI_PATH }}
 
       - name: Update Release
-        permissions:
-          contents: write
         # if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
