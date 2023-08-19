@@ -54,21 +54,21 @@ jobs:
       - name: Get Variables (Windows)
         run: |
           echo "$env:GITHUB_ENV"
-          echo ("TAG=" + $env:GITHUB_REF.replace('refs/tags/', '')) >> $env:GITHUB_ENV
+          echo ("TAG=" + $env:GITHUB_REF.replace('refs/heads/', '')) >> $env:GITHUB_ENV
           echo "CLI_PATH=onscreenkeyboard.exe" >> $env:GITHUB_ENV
           echo "OS=Windows" >> $env:GITHUB_ENV
         if: matrix.os == 'windows-latest'
 
       - name: Get Variables (MacOS)
         run: |
-          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo ("TAG=" + $env:GITHUB_REF.replace('refs/heads/', '')) >> $GITHUB_ENV
           echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=MacOS" >> $GITHUB_ENV
         if: matrix.os == 'macos-latest'
 
       - name: Get Variables (Linux)
         run: |
-          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo ("TAG=" + $env:GITHUB_REF.replace('refs/heads/', '')) >> $GITHUB_ENV
           echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=Linux-GNU" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-latest'
@@ -87,65 +87,66 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           asset_name: onscreenkeyboard-${{ env.OS }}-x86_64
-  build-deb:
-    needs: build
+  # build-deb:
+  #   needs: build
     # if: github.event_name == 'release'
-    runs-on: ubuntu-latest
+      - name: Build deb
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+        steps:
+          - uses: actions/checkout@v3
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: Linux-GNU-onscreenkeyboard
+          - name: Download Artifact
+            uses: actions/download-artifact@v3
+            with:
+              name: Linux-GNU-onscreenkeyboard
 
 
-      - name: Create Package Files
-        run: |
-          mkdir -p .debpkg/usr/bin
-          mkdir -p .rpmpkg/usr/bin
-          chmod +x onscreenkeyboard
-          cp -p onscreenkeyboard .debpkg/usr/bin/
-          cp -p onscreenkeyboard .rpmpkg/usr/bin/
-      - name: Build DEB
-        uses: jiro4989/build-deb-action@v2
-        with:
-          package: ${{ env.NAME }}
-          package_root: .debpkg
-          maintainer: visnkmr
-          version: ${{ github.ref }}
-          arch: "amd64"
-          desc: "${{ env.DESC }}"
+          - name: Create Package Files
+            run: |
+              mkdir -p .debpkg/usr/bin
+              mkdir -p .rpmpkg/usr/bin
+              chmod +x onscreenkeyboard
+              cp -p onscreenkeyboard .debpkg/usr/bin/
+              cp -p onscreenkeyboard .rpmpkg/usr/bin/
+          - name: Build DEB
+            uses: jiro4989/build-deb-action@v2
+            with:
+              package: ${{ env.NAME }}
+              package_root: .debpkg
+              maintainer: visnkmr
+              version: ${{ github.ref }}
+              arch: "amd64"
+              desc: "${{ env.DESC }}"
 
-      - name: Build RPM
-        uses: jiro4989/build-rpm-action@v2
-        with:
-          summary: "${{ env.DESC }}"
-          package: ${{ env.NAME }}
-          package_root: .rpmpkg
-          maintainer: visnkmr
-          version: ${{ github.ref }}
-          arch: "x86_64"
-          desc: "${{ env.DESC }}"
+          - name: Build RPM
+            uses: jiro4989/build-rpm-action@v2
+            with:
+              summary: "${{ env.DESC }}"
+              package: ${{ env.NAME }}
+              package_root: .rpmpkg
+              maintainer: visnkmr
+              version: ${{ github.ref }}
+              arch: "x86_64"
+              desc: "${{ env.DESC }}"
 
-      - name: Upload DEB Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: artifact-deb
-          path: |
-            ./*.deb
-      - name: Upload RPM Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: artifact-rpm
-          path: |
-            ./*.rpm
-            !./*-debuginfo-*.rpm
-      - name: Update Release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          file: "{onscreenkeyboard-[!d]*.rpm,*.deb}"
-          tag: ${{ github.ref }}
-          overwrite: true
-          file_glob: true  
+          - name: Upload DEB Artifact
+            uses: actions/upload-artifact@v3
+            with:
+              name: artifact-deb
+              path: |
+                ./*.deb
+          - name: Upload RPM Artifact
+            uses: actions/upload-artifact@v3
+            with:
+              name: artifact-rpm
+              path: |
+                ./*.rpm
+                !./*-debuginfo-*.rpm
+          - name: Update Release
+            uses: svenstaro/upload-release-action@v2
+            with:
+              file: "{onscreenkeyboard-[!d]*.rpm,*.deb}"
+              tag: ${{ github.ref }}
+              overwrite: true
+              file_glob: true  
