@@ -93,8 +93,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
 
+      - uses: actions/checkout@v3
+      - name: Get Variables (Linux)
+        run: |
+          echo "TAG=$(echo $GITHUB_REF | sed 's/^refs\/heads\///')" >> $GITHUB_ENV
+          echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
+          echo "OS=Linux-GNU" >> $GITHUB_ENV
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
