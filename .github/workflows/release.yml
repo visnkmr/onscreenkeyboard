@@ -89,7 +89,7 @@ jobs:
           asset_name: onscreenkeyboard-${{ env.OS }}-x86_64
   build-deb:
     needs: build
-    if: github.event_name == 'release'
+    # if: github.event_name == 'release'
     runs-on: ubuntu-latest
 
     steps:
