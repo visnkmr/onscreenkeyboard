@@ -61,14 +61,14 @@ jobs:
 
       - name: Get Variables (MacOS)
         run: |
-          echo ("TAG=" + $env:GITHUB_REF.replace('refs/heads/', '')) >> $GITHUB_ENV
+          echo "TAG=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
           echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=MacOS" >> $GITHUB_ENV
         if: matrix.os == 'macos-latest'
 
       - name: Get Variables (Linux)
         run: |
-          echo ("TAG=" + $env:GITHUB_REF.replace('refs/heads/', '')) >> $GITHUB_ENV
+          echo "TAG=$(echo $GITHUB_REF | sed 's/^refs\/heads\///')" >> $GITHUB_ENV
           echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=Linux-GNU" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-latest'
