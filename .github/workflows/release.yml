@@ -86,7 +86,7 @@ jobs:
           file: target/release/${{ env.CLI_PATH }}
           tag: ${{ github.ref }}
           overwrite: true
-          asset_name: onscreenkeyboard-${{ env.OS }}-x86_64
+          asset_name: onscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
   build-deb:
     needs: build
     # if: github.event_name == 'release'
@@ -114,7 +114,7 @@ jobs:
           package: ${{ env.NAME }}
           package_root: .debpkg
           maintainer: visnkmr
-          version: $(echo $GITHUB_REF | sed 's/^refs\/heads\///')
+          version: ${{ env.TAG }}
           arch: "amd64"
           desc: "${{ env.DESC }}"
 
@@ -125,7 +125,7 @@ jobs:
           package: ${{ env.NAME }}
           package_root: .rpmpkg
           maintainer: visnkmr
-          version: $(echo $GITHUB_REF | sed 's/^refs\/heads\///')
+          version: ${{ env.TAG }}
           arch: "x86_64"
           desc: "${{ env.DESC }}"
 
@@ -146,6 +146,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           file: "{onscreenkeyboard-[!d]*.rpm,*.deb}"
-          tag: $(echo $GITHUB_REF | sed 's/^refs\/heads\///')
+          tag: ${{ github.ref }}
           overwrite: true
           file_glob: true  
