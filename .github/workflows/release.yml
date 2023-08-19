@@ -16,11 +16,38 @@ env:
   DESC: A simple onscreenremote for PC with some basic controls
 
 jobs:
+  create-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-20.04
+    outputs:
+      release_id: ${{ steps.create-release.outputs.result }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: create release
+        id: create-release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: ${{ github.ref }},
+              name: `OnScreenKeyboard v${process.env.PACKAGE_VERSION}`,
+              body: 'Checkout commit for detailed changelog on what has changed.',
+              draft: true,
+              prerelease: false
+            })
+            return data.id
+
   build:
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -78,6 +105,8 @@ jobs:
           path: target/release/${{ env.CLI_PATH }}
 
       - name: Update Release
+        permissions:
+          contents: write
         # if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
