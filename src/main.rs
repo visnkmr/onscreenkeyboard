@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::{time, thread};
 
-use gtk::{prelude::*, Window};
+use gtk::{prelude::*, Window, Align};
 use gtk::{ WindowType};
 use rdev::{Key, EventType, simulate};
 // fn on_activate(application: &gtk::Application) {
@@ -184,6 +184,8 @@ let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         container.add(&button);
     
     let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    row_container.set_property("halign", &Align::Center);
+    row_container.set_property("halign", &Align::Center);
     // for _ in 0..5 {
         let button = gtk::Button::with_label("Left");
         button.set_margin(20);
