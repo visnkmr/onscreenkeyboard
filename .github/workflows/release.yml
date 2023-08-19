@@ -24,7 +24,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      - run: |
+            sudo apt-get update
+            sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libpango1.0-dev libatk1.0-dev libglib2.0-dev libgdk-pixbuf2.0-dev librust-gdk-sys-dev
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Install Dependencies
+        run: |
+            sudo chown -R $(whoami) $(brew --prefix)/*
+            brew install pkg-config pango gtk+4 libadwaita gstreamer
+        if: ${{ matrix.os == 'macos-latest' }}
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
