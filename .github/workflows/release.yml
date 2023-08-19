@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NAME: noscreenkeyboard
+  NAME: onscreenkeyboard
   DESC: A simple onscreenremote for PC with some basic controls
 
 jobs:
@@ -37,35 +37,35 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release -p noscreenkeyboard
+          args: --release -p onscreenkeyboard
 
       # Windows scripting isn't the same.
       - name: Get Variables (Windows)
         run: |
           echo "$env:GITHUB_ENV"
           echo ("TAG=" + $env:GITHUB_REF.replace('refs/tags/', '')) >> $env:GITHUB_ENV
-          echo "CLI_PATH=noscreenkeyboard.exe" >> $env:GITHUB_ENV
+          echo "CLI_PATH=onscreenkeyboard.exe" >> $env:GITHUB_ENV
           echo "OS=Windows" >> $env:GITHUB_ENV
         if: matrix.os == 'windows-latest'
 
       - name: Get Variables (MacOS)
         run: |
           echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "CLI_PATH=noscreenkeyboard" >> $GITHUB_ENV
+          echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=MacOS" >> $GITHUB_ENV
         if: matrix.os == 'macos-latest'
 
       - name: Get Variables (Linux)
         run: |
           echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "CLI_PATH=noscreenkeyboard" >> $GITHUB_ENV
+          echo "CLI_PATH=onscreenkeyboard" >> $GITHUB_ENV
           echo "OS=Linux-GNU" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-latest'
 
       - name: Upload Binary
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.OS }}-noscreenkeyboard
+          name: ${{ env.OS }}-onscreenkeyboard
           path: target/release/${{ env.CLI_PATH }}
 
       - name: Update Release
@@ -75,4 +75,4 @@ jobs:
           file: target/release/${{ env.CLI_PATH }}
           tag: ${{ github.ref }}
           overwrite: true
-          asset_name: noscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
+          asset_name: onscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
