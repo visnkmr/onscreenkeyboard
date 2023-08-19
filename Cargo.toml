@@ -21,3 +21,4 @@ panic = "abort"
 [dependencies]
 rdev = "0.5.1"
 gtk="0.17.1"
+glib="0.17.9"
