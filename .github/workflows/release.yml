@@ -88,6 +88,8 @@ jobs:
           overwrite: true
           asset_name: onscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
   build-deb:
+    permissions:
+      contents: write
     needs: build
     # if: github.event_name == 'release'
     runs-on: ubuntu-latest
