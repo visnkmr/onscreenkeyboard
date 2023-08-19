@@ -1,4 +1,5 @@
 
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::{time, thread};
 
@@ -36,7 +37,7 @@ fn gethoverwindow(window2:&Window)->Window{
     let window = gtk::Window::new(WindowType::Toplevel);
     window.set_title("Unfocusable Window");
     window.set_decorated(false);
-    // window.set_default_size(480, 480);
+    // window.set_default_size(800,800);
     window.set_keep_above(true);
     window.set_skip_taskbar_hint(true);
     window.set_skip_pager_hint(true);
@@ -104,12 +105,57 @@ fn main() {
     window.set_skip_pager_hint(true);
     window.set_accept_focus(false);
 
-    let button = gtk::Button::with_label("A");
-    button.set_margin(20);
-    button.connect_clicked(|_| {
-        pressandrelease(Key::KeyA);
+    let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let letters = vec![
+        vec!["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        vec!["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+        vec!["Z", "X", "C", "V", "B", "N", "M"],
+    ];
+    let key_map: HashMap<&str, Key> = [
+        ("A", Key::KeyA),
+        ("B", Key::KeyB),
+        ("C", Key::KeyC),
+        ("D", Key::KeyD),
+        ("E", Key::KeyE),
+        ("F", Key::KeyF),
+        ("G", Key::KeyG),
+        ("H", Key::KeyH),
+        ("I", Key::KeyI),
+        ("J", Key::KeyJ),
+        ("K", Key::KeyK),
+        ("L", Key::KeyL),
+        ("M", Key::KeyM),
+        ("N", Key::KeyN),
+        ("O", Key::KeyO),
+        ("P", Key::KeyP),
+        ("Q", Key::KeyQ),
+        ("R", Key::KeyR),
+        ("S", Key::KeyS),
+        ("T", Key::KeyT),
+        ("U", Key::KeyU),
+        ("V", Key::KeyV),
+        ("W", Key::KeyW),
+        ("X", Key::KeyX),
+        ("Y", Key::KeyY),
+        ("Z", Key::KeyZ),
+    ]
+    .iter()
+    .cloned()
+    .collect();
+for row in letters {
+    let row_container = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    for letter in row {
+        let button = gtk::Button::with_label(letter);
+        // button.set_margin(20);
+        let key = key_map.get(letter).cloned();
+        button.connect_clicked(move |_| {
+            pressandrelease(key.unwrap())
+        });
+        row_container.add(&button);
+    }
+    container.add(&row_container);
+}
 
-    });
     let button3 = gtk::Button::with_label("Fullscreen");
     button3.set_margin(20);
     button3.connect_clicked(|_| {
@@ -132,7 +178,7 @@ fn main() {
 
   let vbox = gtk::Box::new(gtk::Orientation::Vertical, 0);
 //   vbox.set_no_show_all(true); 
-  vbox.add(&button);
+  vbox.add(&container);
   vbox.add(&button2);
   vbox.add(&button3);
   vbox.add(&toggle_button);
@@ -142,7 +188,7 @@ fn main() {
   window.add(&vbox);
   let win2 = gethoverwindow(&window);
 
-  toggle_button.connect_clicked(glib::clone!(@weak win2,@weak vbox, @weak button,@weak button2,@weak button3, @weak window => move |_| {
+  toggle_button.connect_clicked(glib::clone!(@weak win2,@weak vbox,@weak button2,@weak button3, @weak window => move |_| {
     window.hide();
     win2.show_all();
     // let cv=*arco.lock().unwrap();
@@ -188,7 +234,7 @@ fn main() {
 }
 
 fn send(event_type: &EventType) {
-    let delay = time::Duration::from_millis(20);
+    // let delay = time::Duration::from_millis(20);
     match simulate(event_type) {
         Ok(()) => (),
         Err(SimulateError) => {
@@ -196,7 +242,7 @@ fn send(event_type: &EventType) {
         }
     }
     // Let ths OS catchup (at least MacOS)
-    thread::sleep(delay);
+    // thread::sleep(delay);
 }
 fn pressandrelease(key:Key){
     send(&EventType::KeyPress(key));
