@@ -23,6 +23,12 @@ fn main() {
         pressandrelease(Key::KeyA);
 
     });
+    let button3 = gtk::Button::with_label("Fullscreen");
+    button3.set_margin(20);
+    button3.connect_clicked(|_| {
+        fullscreen();
+
+    });
     let button2 = gtk::Button::with_label("Quit");
     button2.set_margin(20);
     button2.connect_clicked(|_| {
@@ -33,6 +39,7 @@ fn main() {
     let vbox = gtk::Box::new(gtk::Orientation::Vertical, 0);
     vbox.add(&button);
     vbox.add(&button2);
+    vbox.add(&button3);
     window.add(&vbox);
 
     window.show_all();
@@ -65,4 +72,10 @@ fn send(event_type: &EventType) {
 fn pressandrelease(key:Key){
     send(&EventType::KeyPress(key));
     send(&EventType::KeyRelease(key));
+}
+fn fullscreen(){
+    send(&EventType::KeyPress(Key::Alt));
+    send(&EventType::KeyPress(Key::F11));
+    send(&EventType::KeyRelease(Key::F11));
+    send(&EventType::KeyRelease(Key::Alt));
 }
