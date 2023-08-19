@@ -87,7 +87,7 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           asset_name: onscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
- build-deb:
+  build-deb:
     needs: build
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
