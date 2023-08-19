@@ -86,7 +86,7 @@ jobs:
           file: target/release/${{ env.CLI_PATH }}
           tag: ${{ github.ref }}
           overwrite: true
-          asset_name: onscreenkeyboard-${{ env.TAG }}-${{ env.OS }}-x86_64
+          asset_name: onscreenkeyboard-${{ env.OS }}-x86_64
   build-deb:
     needs: build
     if: github.event_name == 'release'
@@ -98,7 +98,8 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          name: Linux-GNU-onscreenkeyboard
+          name: onscreenkeyboard-Linux-GNU-x86_64
+
 
       - name: Create Package Files
         run: |
